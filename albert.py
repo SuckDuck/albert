@@ -48,7 +48,7 @@ albert_options = {
 }
 
 def set_focus(d):
-    wait = WebDriverWait(d, 30)
+    wait = WebDriverWait(d, 10**9)
     iframe = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "iframe.app-frame")))
     wait.until(lambda d: iframe.size["width"] > 10 and iframe.size["height"] > 10)
     time.sleep(1)
