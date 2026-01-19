@@ -35,7 +35,8 @@ users_queue = [
     #49171, Esteban Huertas
     149,   #Patrick Batista
     153,   #Luis Valerin
-    93521, #Jose Arrieta
+    74955, #David Lopez
+    141291,#Jose Arrieta
     9      #Misael Artavia
 ]
 current_user = 0
@@ -137,7 +138,7 @@ while True:
                   # reseting the app...
                   albert_options["wasConnected"] = payload["wasConnected"]
                   driver.refresh()
-                  inject_albert_options(driver, albert_options, 5)
+                  inject_albert_options(driver, albert_options, 10**9)
                   current_user += 1
                   if current_user >= len(users_queue):
                       current_user = 0
