@@ -125,8 +125,15 @@ while True:
    
     try:
         while True:
-            time.sleep(0.5)
-            
+            time.sleep(0.3)
+            nav_type = driver.execute_script("""return performance.getEntriesByType('navigation')[0]?.type""")
+            if (nav_type == "reload"):
+                driver.get(APP_URL)
+                albert_options["wasConnected"] = True
+                inject_albert_options(driver, albert_options, 10**9)
+                install_albert_console_hook(driver)
+                set_focus(driver)
+
             # bitrix doesn't return to the app page once the call is finished
             # so we have to do this shit to return main page
             for entry in driver.get_log("browser"):
@@ -137,7 +144,7 @@ while True:
                   
                   # reseting the app...
                   albert_options["wasConnected"] = payload["wasConnected"]
-                  driver.refresh()
+                  driver.get(APP_URL)
                   inject_albert_options(driver, albert_options, 10**9)
                   current_user += 1
                   if current_user >= len(users_queue):
