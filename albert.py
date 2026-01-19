@@ -113,7 +113,7 @@ def install_albert_console_hook(driver):
 while True:
     driver = webdriver.Chrome(options=options)
     driver.get(APP_URL)
-    inject_albert_options(driver, albert_options, 5)
+    inject_albert_options(driver, albert_options, 10**9)
     current_user += 1
     if current_user >= len(users_queue):
         current_user = 0
