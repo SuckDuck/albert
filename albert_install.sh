@@ -12,7 +12,7 @@ cd st
 make install
 cd ..
 
-pacman -Sy greetd xorg-xset python-pip chromium
+pacman -Sy greetd xorg-xset python-pip chromium tk tcl base-devel
 systemctl enable greetd.service
 cp greetd_config.toml /etc/greetd/config.toml
 cp .xinitrc ../
