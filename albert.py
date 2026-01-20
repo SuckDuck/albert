@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from pynput import keyboard
 from pathlib import Path
 import pyautogui
 import re, json
@@ -41,12 +42,31 @@ users_queue = [
 ]
 current_user = 0
 
+KEY = "z"
+
 albert_options = {
-    "callKey":"KeyZ",
+    "callKey":f"Key{max(KEY)}",
     "scroll":"130",
     "user":users_queue[0],
     "wasConnected":True,
 }
+
+# < ==== INPUT INIT ==============================================>
+held = set()
+down = set()
+up = set()
+panic_timer = 0.0
+
+def on_press(key):
+    if key not in held:
+        down.add(key)
+    held.add(key)
+
+def on_release(key):
+    held.discard(key)
+    up.add(key)
+
+keyboard.Listener(on_press=on_press, on_release=on_release).start()
 
 def set_focus(d):
     wait = WebDriverWait(d, 10**9)
@@ -125,9 +145,11 @@ while True:
    
     try:
         while True:
-            time.sleep(0.3)
+            time.sleep(1/30)            
+            # initialize eveeything if the front end gets reloaded
             nav_type = driver.execute_script("""return performance.getEntriesByType('navigation')[0]?.type""")
-            if (nav_type == "reload"):
+            if (nav_type == "reload" or panic_timer > 6):
+                panic_timer = -1
                 driver.get(APP_URL)
                 albert_options["wasConnected"] = True
                 inject_albert_options(driver, albert_options, 10**9)
@@ -153,6 +175,13 @@ while True:
                   albert_options["wasConnected"] = True
                   install_albert_console_hook(driver)
                   set_focus(driver)
+
+            # < ==== INPUT LOOP ==============================================>
+            if keyboard.KeyCode.from_char(KEY) in held and panic_timer > -1: panic_timer += 1/30
+            if keyboard.KeyCode.from_char(KEY) in up: panic_timer = 0
+            
+            down.clear()
+            up.clear()
 
             driver.title #force an action
 
