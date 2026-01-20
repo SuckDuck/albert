@@ -30,7 +30,7 @@ options.add_experimental_option("useAutomationExtension", False)
 options.set_capability("goog:loggingPrefs", {"browser": "ALL"})
 options.add_argument("--start-fullscreen")
 
-options.dd_argument("--hide-crash-restore-bubble")
+options.add_argument("--hide-crash-restore-bubble")
 options.add_argument("--disable-session-crashed-bubble")
 options.add_argument("--disable-features=InfiniteSessionRestore")
 options.add_argument("--disable-infobars")
