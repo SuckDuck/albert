@@ -150,6 +150,10 @@ while True:
             if (nav_type == "reload" or panic_timer > 6):
                 panic_timer = -1
                 driver.get(APP_URL)
+                current_user += 1
+                if current_user >= len(users_queue):
+                    current_user = 0
+                albert_options["user"] = users_queue[current_user]
                 albert_options["wasConnected"] = True
                 inject_albert_options(driver, albert_options, 10**9)
                 install_albert_console_hook(driver)
