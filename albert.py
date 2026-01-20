@@ -30,7 +30,7 @@ options.add_experimental_option("useAutomationExtension", False)
 options.set_capability("goog:loggingPrefs", {"browser": "ALL"})
 options.add_argument("--start-fullscreen")
 
-options.add_argument("--hide-crash-restore-bubble")
+options.abdd_argument("--hide-crash-restore-bubble")
 options.add_argument("--disable-session-crashed-bubble")
 options.add_argument("--disable-features=InfiniteSessionRestore")
 options.add_argument("--disable-infobars")
@@ -130,6 +130,10 @@ def install_albert_console_hook(driver):
           wasConnected: args[1].call.wasConnected
         }));
       }
+                          
+      if (attr?.code === "user_is_busy") {
+        origLog("user_is_busy");
+      }
       return origLog.apply(console, args);
     };
     })();
@@ -167,22 +171,35 @@ while True:
             # bitrix doesn't return to the app page once the call is finished
             # so we have to do this shit to return main page
             for entry in driver.get_log("browser"):
-              msg = entry.get("message", "")
-              if '\\"albertEvent\\":\\"onCallLeave\\"' in msg:
-                  m = re.search(r'\{\\\"albertEvent\\\":\\\"onCallLeave\\\".*?\}', entry.get("message", ""))
-                  payload = json.loads(m.group(0).replace('\\"', '"'))
-                  
-                  # reseting the app...
-                  albert_options["wasConnected"] = payload["wasConnected"]
-                  driver.get(APP_URL)
-                  inject_albert_options(driver, albert_options, 10**9)
-                  current_user += 1
-                  if current_user >= len(users_queue):
-                      current_user = 0
-                  albert_options["user"] = users_queue[current_user]
-                  albert_options["wasConnected"] = True
-                  install_albert_console_hook(driver)
-                  set_focus(driver)
+                msg = entry.get("message", "")
+                if '\\"albertEvent\\":\\"onCallLeave\\"' in msg:
+                    m = re.search(r'\{\\\"albertEvent\\\":\\\"onCallLeave\\\".*?\}', entry.get("message", ""))
+                    payload = json.loads(m.group(0).replace('\\"', '"'))
+                    
+                    # reseting the app...
+                    albert_options["wasConnected"] = payload["wasConnected"]
+                    driver.get(APP_URL)
+                    inject_albert_options(driver, albert_options, 10**9)
+                    current_user += 1
+                    if current_user >= len(users_queue):
+                        current_user = 0
+                    albert_options["user"] = users_queue[current_user]
+                    albert_options["wasConnected"] = True
+                    install_albert_console_hook(driver)
+                    set_focus(driver)
+
+                elif "user_is_busy" in msg:
+                    # reseting the app...
+                    albert_options["wasConnected"] = payload["wasConnected"]
+                    driver.get(APP_URL)
+                    inject_albert_options(driver, albert_options, 10**9)
+                    current_user += 1
+                    if current_user >= len(users_queue):
+                        current_user = 0
+                    albert_options["user"] = users_queue[current_user]
+                    albert_options["wasConnected"] = True
+                    install_albert_console_hook(driver)
+                    set_focus(driver)
 
             # < ==== INPUT LOOP ==============================================>
             if KEY in held and panic_timer > -1: panic_timer += 1/30
