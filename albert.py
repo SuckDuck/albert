@@ -116,52 +116,45 @@ def inject_albert_options(driver, options: dict, timeout: int = 20):
         driver.switch_to.default_content()
 
 def install_albert_console_hook(driver):
-    driver.execute_script("""
+    driver.execute_script(r"""
     (function () {
       if (window.__albertHookInstalled) return;
       window.__albertHookInstalled = true;
 
-      const origLog = console.log;
-      const origError = console.error;
+      const origLog   = console.log.bind(console);
+      const origError = console.error.bind(console);
 
-      console.log = function (...args) {
-      if (args[0] === "_onCallLeave" && args[1] && args[1].call && ("wasConnected" in args[1].call)) {
-        origLog(JSON.stringify({
-          albertEvent: "onCallLeave",
-          wasConnected: args[1].call.wasConnected
-        }));
-      }
-                          
-      const busyObj = args.find(x =>
+      function hasUserBusy(args) {
+        return args.some(x =>
           x !== null &&
           typeof x === "object" &&
           !Array.isArray(x) &&
           x.code === "user_is_busy"
         );
+      }
 
-        if (busyObj) {
-          origLog(JSON.stringify({
-            albertEvent: "error",
-            code: busyObj.code,
-            message: busyObj.message
-          }));
-        }
+      console.log = function (...args) {
+        try {
+          if (args[0] === "_onCallLeave" && args[1]?.call && ("wasConnected" in args[1].call)) {
+            origLog(JSON.stringify({
+              albertEvent: "onCallLeave",
+              wasConnected: args[1].call.wasConnected
+            }));
+          }
 
-      return origLog.apply(console, args);
-    };
-    })();
-                          
+          if (hasUserBusy(args)) origLog("user_is_busy");
+        } catch (e) {}
 
+        return origLog(...args);
+      };
 
-    console.error = function (...args) {
+      console.error = function (...args) {
+        try {
+          if (hasUserBusy(args)) origLog("user_is_busy");
+        } catch (e) {}
 
-    const err = args[0];
-    if (err && typeof err === "object" && err.code === "user_is_busy") {
-        origLog("user_is_busy");
-    }
-
-    return origError.apply(console, args);
-    };
+        return origError(...args);
+      };
     })();
     """)
 
