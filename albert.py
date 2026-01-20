@@ -122,6 +122,7 @@ def install_albert_console_hook(driver):
       window.__albertHookInstalled = true;
 
       const origLog = console.log;
+      const origError = console.error;
 
       console.log = function (...args) {
       if (args[0] === "_onCallLeave" && args[1] && args[1].call && ("wasConnected" in args[1].call)) {
@@ -147,6 +148,19 @@ def install_albert_console_hook(driver):
         }
 
       return origLog.apply(console, args);
+    };
+    })();
+                          
+
+
+    console.error = function (...args) {
+
+    const err = args[0];
+    if (err && typeof err === "object" && err.code === "user_is_busy") {
+        origLog("user_is_busy");
+    }
+
+    return origError.apply(console, args);
     };
     })();
     """)
