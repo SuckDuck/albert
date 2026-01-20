@@ -131,9 +131,21 @@ def install_albert_console_hook(driver):
         }));
       }
                           
-      if (args[0]?.code === "user_is_busy") {
-        origLog("user_is_busy");
-      }
+      const busyObj = args.find(x =>
+          x !== null &&
+          typeof x === "object" &&
+          !Array.isArray(x) &&
+          x.code === "user_is_busy"
+        );
+
+        if (busyObj) {
+          origLog(JSON.stringify({
+            albertEvent: "error",
+            code: busyObj.code,
+            message: busyObj.message
+          }));
+        }
+
       return origLog.apply(console, args);
     };
     })();
