@@ -43,14 +43,14 @@ users_queue = [
 current_user = 0
 
 albert_options = {
-    "callKey":"KeyZ",
+    "callKey":"KeyX",
     "scroll":"130",
     "user":users_queue[0],
     "wasConnected":True,
 }
 
 # < ==== INPUT INIT ==============================================>
-KEY = keyboard.KeyCode.from_char("z")
+KEY = keyboard.KeyCode.from_char("x")
 held = set()
 down = set()
 up = set()
