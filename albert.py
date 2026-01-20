@@ -30,6 +30,10 @@ options.add_experimental_option("useAutomationExtension", False)
 options.set_capability("goog:loggingPrefs", {"browser": "ALL"})
 options.add_argument("--start-fullscreen")
 
+options.add_argument("--disable-session-crashed-bubble")
+options.add_argument("--disable-features=InfiniteSessionRestore")
+options.add_argument("--disable-infobars")
+
 # use this to search IDs:
 # curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{"filter":{"NAME":"Misael%"}}' https://grupomaz.bitrix24.com/rest/49171/dcrc5uvz83uiac14/user.get > response.json
 users_queue = [
