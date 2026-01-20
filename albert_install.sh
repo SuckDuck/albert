@@ -17,4 +17,4 @@ systemctl enable greetd.service
 cp greetd_config.toml /etc/greetd/config.toml
 cp .xinitrc ../
 
-pip install --break-system-packages selenium PyAutoGUI
+pip install --break-system-packages selenium PyAutoGUI pynput
