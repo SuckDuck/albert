@@ -42,16 +42,15 @@ users_queue = [
 ]
 current_user = 0
 
-KEY = "z"
-
 albert_options = {
-    "callKey":f"Key{max(KEY)}",
+    "callKey":"KeyZ",
     "scroll":"130",
     "user":users_queue[0],
     "wasConnected":True,
 }
 
 # < ==== INPUT INIT ==============================================>
+KEY = keyboard.KeyCode.from_char("z")
 held = set()
 down = set()
 up = set()
@@ -145,7 +144,7 @@ while True:
    
     try:
         while True:
-            time.sleep(1/30)            
+            time.sleep(1/30)
             # initialize eveeything if the front end gets reloaded
             nav_type = driver.execute_script("""return performance.getEntriesByType('navigation')[0]?.type""")
             if (nav_type == "reload" or panic_timer > 6):
@@ -177,15 +176,18 @@ while True:
                   set_focus(driver)
 
             # < ==== INPUT LOOP ==============================================>
-            if keyboard.KeyCode.from_char(KEY) in held and panic_timer > -1: panic_timer += 1/30
-            if keyboard.KeyCode.from_char(KEY) in up: panic_timer = 0
+            if KEY in held and panic_timer > -1: panic_timer += 1/30
+            if KEY in up: panic_timer = 0
             
             down.clear()
             up.clear()
 
             driver.title #force an action
 
-    except WebDriverException:
+    except:
+        try: driver.quit()
+        except: pass
+        
         print("Browser closed, launching again...")
         time.sleep(5)
 
