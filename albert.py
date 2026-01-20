@@ -131,7 +131,7 @@ def install_albert_console_hook(driver):
         }));
       }
                           
-      if (attr?.code === "user_is_busy") {
+      if (args[0]?.code === "user_is_busy") {
         origLog("user_is_busy");
       }
       return origLog.apply(console, args);
