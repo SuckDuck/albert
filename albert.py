@@ -209,7 +209,7 @@ while True:
 
                 elif "user_is_busy" in msg:
                     # reseting the app...
-                    albert_options["wasConnected"] = payload["wasConnected"]
+                    albert_options["wasConnected"] = False
                     driver.get(APP_URL)
                     inject_albert_options(driver, albert_options, 10**9)
                     current_user += 1
