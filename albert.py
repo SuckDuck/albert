@@ -147,7 +147,7 @@ while True:
             time.sleep(1/30)
             # initialize eveeything if the front end gets reloaded
             nav_type = driver.execute_script("""return performance.getEntriesByType('navigation')[0]?.type""")
-            if (nav_type == "reload" or panic_timer > 6):
+            if (nav_type == "reload" or panic_timer > 3):
                 panic_timer = -1
                 driver.get(APP_URL)
                 current_user += 1
