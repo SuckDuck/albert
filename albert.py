@@ -47,15 +47,17 @@ users_queue = [
 ]
 current_user = 0
 
+KEYS = [ "x", "q", "s", "c" ]
 albert_options = {
-    "callKey":"KeyX",
+    "callKeys":[f"Key{i.upper()}" for i in KEYS],
     "scroll":"130",
     "user":users_queue[0],
     "wasConnected":True,
 }
+KEYS = [keyboard.KeyCode.from_char(k) for k in KEYS]
 
 # < ==== INPUT INIT ==============================================>
-KEY = keyboard.KeyCode.from_char("x")
+
 held = set()
 down = set()
 up = set()
@@ -221,8 +223,9 @@ while True:
                     set_focus(driver)
 
             # < ==== INPUT LOOP ==============================================>
-            if KEY in held and panic_timer > -1: panic_timer += 1/30
-            if KEY in up: panic_timer = 0
+            for key in KEYS:
+                if key in held and panic_timer > -1: panic_timer += 1/30
+                if key in up: panic_timer = 0
             
             down.clear()
             up.clear()
