@@ -3,8 +3,7 @@ xset -dpms
 systemd-inhibit --what=sleep:idle:handle-lid-switch --who=kiosk --why="No sleep" sleep infinity &
 
 dwm &
-eval "$(xdotool getdisplaygeometry --shell)"
-xdotool mousemove $((WIDTH-1)) $((HEIGHT-1))
+unclutter --timeout 0 --start-hidden --jitter 5 &
 
 feh --bg-fill /home/albert/albert/wp.png
 
