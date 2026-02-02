@@ -12,6 +12,8 @@ import pyautogui
 import re, json
 import time
 
+from get_user import get_users
+
 BASE_DIR = Path(__file__).resolve().parent
 PROFILE_DIR = BASE_DIR / "selenium_profile"
 PROFILE_DIR.mkdir(parents=True, exist_ok=True)
@@ -47,12 +49,14 @@ options.add_experimental_option("prefs", prefs)
 # use this to search IDs:
 # curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{"filter":{"NAME":"Misael%"}}' https://grupomaz.bitrix24.com/rest/49171/dcrc5uvz83uiac14/user.get > response.json
 users_queue = [
-    #49171, Esteban Huertas
-    149,   #Patrick Batista
-    153,   #Luis Valerin
-    74955, #David Lopez
-    141291,#Jose Arrieta
-    9      #Misael Artavia
+    #"49171", #Esteban Huertas
+    #149,   #Patrick Batista
+    #153,   #Luis Valerin
+    #74955, #David Lopez
+    #141291,#Jose Arrieta
+    #9      #Misael Artavia
+    
+    "chat80823"
 ]
 current_user = 0
 
